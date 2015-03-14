@@ -1,6 +1,6 @@
 *.class
 *.log
-.settings
+.settings/
 
 # sbt specific
 .cache/
