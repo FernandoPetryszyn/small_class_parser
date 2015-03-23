@@ -11,6 +11,7 @@ trait RubyClassParser extends RegexParsers {
   trait Variable extends Definition
   trait Valores
   case class Entero(id: String, value: Numero) extends Variable
+  case object Empty extends Variable
   case class Numero(value: Int) extends Valores
   trait Sentencia
   case class Define(variable: Variable) extends Sentencia
@@ -31,7 +32,7 @@ trait RubyClassParser extends RegexParsers {
   lazy protected val identifier = "[a-zA-Z0-9_]+".r
   lazy protected val number = "[0-9]+".r ^^ {case numero => Numero(numero.toInt)}
   lazy protected val content = method | instanceVariable
-  lazy protected val method = ("def" ~> identifier <~ "(") ~ (repsep(parameter,",") <~ "){") ~ (sentences.* <~ "}")  ^^ {case id ~ parameters ~ sentences => Method(id,parameters,sentences)} 
+  lazy protected val method = ("def" ~> identifier <~ "(") ~ ((repsep(parameter.?,",") <~ ")" ) <~ ("{")) ~ (sentences.* <~ "}")  ^^ {case id ~ parameters ~ sentences => Method(id,parameters map (parameter => parameter.getOrElse(Empty)),sentences)} 
   lazy protected val instanceVariable = (identifier <~ "=".?) ~ number.? ^^ {case id ~ number => Entero(id,number.getOrElse(Numero(0))) }
   lazy protected val parameter = identifier <~ ": int" ^^ {case id => Entero(id,Numero(0))}
   lazy protected val sentences = suma | mult | definirVariable

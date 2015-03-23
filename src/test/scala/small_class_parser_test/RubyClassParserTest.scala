@@ -20,6 +20,22 @@ class RubyClassParserTest extends ParserTest with RubyClassParser {
                a
                }""" should beParsedTo(Program(List(Class("simpleClass",List(Entero("a",Numero(0)))))))(program)
      }
+     
+     "should parse a class with an empty method, with no arguments" in {
+       """
+          class simpleClass {
+            def metodo() {
+            }
+          }""" should beParsedTo(Program(List(Class("simpleClass",List(Method("metodo",List(Empty),Nil))))))(program)
+     }
+     
+     "should parse a class with an empty method, with arguments" in {
+         """
+          class simpleClass {
+            def metodo(a: int) {
+            }
+          }""" should beParsedTo(Program(List(Class("simpleClass",List(Method("metodo",List(Entero("a",Numero(0))),Nil))))))(program)
+     }
    }
  }
 }
