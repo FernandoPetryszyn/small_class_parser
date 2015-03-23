@@ -36,6 +36,14 @@ class RubyClassParserTest extends ParserTest with RubyClassParser {
             }
           }""" should beParsedTo(Program(List(Class("simpleClass",List(Method("metodo",List(Entero("a",Numero(0))),Nil))))))(program)
      }
+     
+     "should parse a class with a method, no arguments, one operation" in { 
+       """class simpleClass {
+           def metodo() {
+             1*2
+             }
+             }""" should beParsedTo(Program(List(Class("simpleClass",List(Method("metodo",List(Empty),List(Multiply(Numero(1),Numero(2)))))))))(program)
+     }
    }
  }
 }
