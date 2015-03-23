@@ -14,6 +14,12 @@ class RubyClassParserTest extends ParserTest with RubyClassParser {
                a=3
                }""" should beParsedTo(Program(List(Class("simpleClass",List(Entero("a",Numero(3)))))))(program)
      }
+     
+     "should parse a class with an instance variable not initialized" in {
+       """class simpleClass {
+               a
+               }""" should beParsedTo(Program(List(Class("simpleClass",List(Entero("a",Numero(0)))))))(program)
+     }
    }
  }
 }

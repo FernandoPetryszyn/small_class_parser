@@ -32,8 +32,8 @@ trait RubyClassParser extends RegexParsers {
   lazy protected val number = "[0-9]+".r ^^ {case numero => Numero(numero.toInt)}
   lazy protected val content = method | instanceVariable
   lazy protected val method = ("def" ~> identifier <~ "(") ~ (repsep(parameter,",") <~ "){") ~ (sentences.* <~ "}")  ^^ {case id ~ parameters ~ sentences => Method(id,parameters,sentences)} 
-  lazy protected val instanceVariable = (identifier <~ "=") ~ number ^^ {case id ~ number => Entero(id,number) }
-  lazy protected val parameter = identifier <~ ": int" ^^ {case id => Entero(id,???)}
+  lazy protected val instanceVariable = (identifier <~ "=".?) ~ number.? ^^ {case id ~ number => Entero(id,number.getOrElse(Numero(0))) }
+  lazy protected val parameter = identifier <~ ": int" ^^ {case id => Entero(id,Numero(0))}
   lazy protected val sentences = suma | mult | definirVariable
   lazy protected val suma = (number <~ "+") ~ number ^^ {case op1 ~ op2 => Add(op1,op2) }
   lazy protected val mult = (number <~ "*") ~ number ^^ {case op1 ~ op2 => Multiply(op1,op2)}
